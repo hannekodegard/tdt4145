@@ -1,10 +1,6 @@
 package tdt4145project;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 public class DBProject {
@@ -31,37 +27,52 @@ public class DBProject {
     	return conn;
     }
 	
-	private void addFilmToDb(Connection con) {
-		
-		
-		
-		String query = "insert into film (tittel, år, beskrivelse) values ((?), (?), (?))";
-		PreparedStatement myStatement;
+	private void addURLToDb(Connection con) {
+		Statement myStat;
 		try {
-			myStatement = con.prepareStatement(query);
-			myStatement.setString(1, "Lord of the rings return of the king");
-			myStatement.setInt(2, 1990);
-			myStatement.setString(3, "Sasaasasa");
-			
-			ResultSet rs = myStatement.executeQuery();
-			
-			
-			while (rs.next()) {
-				String navn = rs.getString(1);
-			}
-			
+			myStat = con.createStatement();
+			String sql = "insert into utgivelsesselskap " + " (URL, Adresse, Land)" + " values ('Hannes', 'Norge', 'Norge')";
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	private void addFilmToDb(Connection con) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String sql = "insert into filmatisering " + " (filmID, tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL)" + " values (1, 'Ted', 120, 2012, null, 'plot', 'Hannes')";
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+	}
+	
+	private void showDbInfo(Connection con) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String sql = "select * from filmatisering";
+			ResultSet statement = myStat.executeQuery(sql);
+			System.out.println(statement);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
 		DBProject dbproject = new DBProject();
 		Connection con = dbproject.connect();
-		dbproject.addFilmToDb(con);
+		//dbproject.addURLToDb(con);
+		//dbproject.addFilmToDb(con);
+		dbproject.showDbInfo(con);
 		
 	}
+	
 }
 
