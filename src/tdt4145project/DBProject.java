@@ -56,9 +56,11 @@ public class DBProject {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String sql = "select * from filmatisering";
+			String sql = "select * from utgivelsesselskap";
 			ResultSet statement = myStat.executeQuery(sql);
-			System.out.println(statement);
+			while (statement.next()) {
+				System.out.println(statement.getString("URL") + ", " + statement.getString("Adresse") + ", " + statement.getString("Land"));
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
