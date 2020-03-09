@@ -6,7 +6,7 @@ import java.util.Properties;
 public class DBProject {
 	
 	String username = "root";
-	String password ="vT<`HW&8k4w{Ldgn";
+	String password ="Gruppe21";
 	String url = "jdbc:mysql://localhost:3306/tdt4145";
 	
 	public Connection connect() {
@@ -52,6 +52,146 @@ public class DBProject {
 		}
 	}
 	
+	private void addMusicToDb(Connection con, int musikkID, String  komponent, int  fremførtAv) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,'%s','%s')", musikkID, komponent, fremførtAv);
+			String sql = "insert into Musikk " + " (musikkID, komponent, fremførtAv)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addInvolvedToDb(Connection con, int personNR,String  navn, int  fødselsår,String  fødselsland) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,'%s', %s, '%s')", personNR, navn, fødselsår, fødselsland);
+			String sql = "insert into involvertIFilm " + " (personNR, navn, fødselsår, fødselsland)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addActorToDb(Connection con, int involvertIFilm_personNr, int filmatisering_filmID, String rolle) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,%s,'%s')", involvertIFilm_personNr, filmatisering_filmID, rolle);
+			String sql = "insert into skuespillerIFilm " + " (involvertIFilm_personNr, filmatisering_filmID, rolle)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addWriterToDb(Connection con, int involvertIFilm_personNr, int filmatisering_filmID) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,%s)", involvertIFilm_personNr, filmatisering_filmID);
+			String sql = "insert into manusforfatterHarSkrevet " + " (involvertIFilm_personNr, filmatisering_filmID)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addProducerToDb(Connection con, int involvertIFilm_personNr, int filmatisering_filmID) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,%s)", involvertIFilm_personNr, filmatisering_filmID);
+			String sql = "insert into regissørRegissertFilm " + " (involvertIFilm_personNr, filmatisering_filmID)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addFormatToDb(Connection con, String type, int filmID) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values ('%s',%s)", type, filmID);
+			String sql = "insert into format " + " (type, filmID)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addCategoryToDb(Connection con, int sjangerID, String beskrivelse) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,'%s')", sjangerID, beskrivelse);
+			String sql = "insert into kategori " + " (sjangerID, beskrivelse)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addMusicInMovieToDb(Connection con, int Musikk_musikkID, int filmatisering_filmID) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,%s)", Musikk_musikkID, filmatisering_filmID);
+			String sql = "insert into musikkI " + " (Musikk_musikkID, filmatisering_filmID)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addEpisodeToDb(Connection con, int episodeNr, int sesong, int filmatisering_filmID) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,%s,%s)", episodeNr, sesong, filmatisering_filmID);
+			String sql = "insert into episode " + " (episodeNr, sesong, filmatisering_filmID)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void addHasCategoryToDb(Connection con, int filmatisering_filmID, int kategori_sjangerID) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,%s)", filmatisering_filmID, kategori_sjangerID);
+			String sql = "insert into harKategori " + " (filmatisering_filmID, kategori_sjangerID)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private void showDbInfo(Connection con) {
 		Statement myStat;
 		try {
@@ -72,8 +212,12 @@ public class DBProject {
 		Connection con = dbproject.connect();
 		//dbproject.addURLToDb(con);
 		//dbproject.addFilmToDb(con);
-		dbproject.showDbInfo(con);
-		
+		//dbproject.showDbInfo(con);
+		//dbproject.addInvolvedToDb(con, 23456, "Niklas", 1996, "Norge");
+		//dbproject.addCategoryToDb(con, 1, "Grøsser");
+		//dbproject.addActorToDb(con, 23456, 1, "Teddybjørn");
+		dbproject.addCategoryToDb(con, 2, "Komedie");
+		dbproject.addHasCategoryToDb(con, 1, 2);
 	}
 	
 }
