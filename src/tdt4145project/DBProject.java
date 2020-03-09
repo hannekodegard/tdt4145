@@ -213,11 +213,12 @@ public class DBProject {
 		//dbproject.addURLToDb(con);
 		//dbproject.addFilmToDb(con);
 		//dbproject.showDbInfo(con);
-		//dbproject.addInvolvedToDb(con, 23456, "Niklas", 1996, "Norge");
+		//dbproject.addInvolvedToDb(con, 2345, "Niklas", 1996, "Norge");
 		//dbproject.addCategoryToDb(con, 1, "Grøsser");
 		//dbproject.addActorToDb(con, 23456, 1, "Teddybjørn");
-		dbproject.addCategoryToDb(con, 2, "Komedie");
-		dbproject.addHasCategoryToDb(con, 1, 2);
+		//dbproject.addCategoryToDb(con, 2, "Komedie");
+		//dbproject.addHasCategoryToDb(con, 1, 2);
+		//Hei
 	}
 	
 }
