@@ -42,7 +42,7 @@ public class DBProject {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String sql = "insert into filmatisering " + " (filmID, tittel, lengde, utgivelses�r, lanseringsdato, storyline, Utgivelsesselskap_URL)" + " values (1, 'Ted', 120, 2012, null, 'plot', 'Hannes')";
+			String sql = "insert into filmatisering " + " (filmID, tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL)" + " values (1, 'Ted', 120, 2012, null, 'plot', 'Hannes')";
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
