@@ -27,6 +27,7 @@ public class DBProject {
     }
 	
 	private void addURLToDb(Connection con) {
+		/** Denne her er statisk, så den må endres for å gi mening å bruke*/
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
@@ -39,6 +40,8 @@ public class DBProject {
 		}	
 	}
 	private void addFilmToDb(Connection con) {
+		/** Denne her er statisk, så den må endres for å gi mening å bruke*/
+
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
@@ -209,14 +212,7 @@ public class DBProject {
 	public static void main(String[] args) {
 		DBProject dbproject = new DBProject();
 		Connection con = dbproject.connect();
-		//dbproject.addURLToDb(con);
-		//dbproject.addFilmToDb(con);
-		//dbproject.showDbInfo(con);
-		//dbproject.addInvolvedToDb(con, 23456, "Niklas", 1996, "Norge");
-		//dbproject.addCategoryToDb(con, 1, "Grøsser");
-		//dbproject.addActorToDb(con, 23456, 1, "Teddybjørn");
-		dbproject.addCategoryToDb(con, 2, "Komedie");
-		dbproject.addHasCategoryToDb(con, 1, 2);
+
 	}
 	
 }
