@@ -23,7 +23,7 @@ public class User {
 
         System.out.println("Enter username");
         String tmp_username = input.nextLine();  // Read user input
-        System.out.println(checkUsername(tmp_username));
+        checkUsername(tmp_username);
 
     }
 
@@ -37,12 +37,12 @@ public class User {
             ResultSet statement = myStat.executeQuery(sql);
             if(statement.next()){
                 this.username = username;
-                System.out.println("Logged into existing user.");
+                System.out.println("Logged into existing user.\n");
             }
             else{
                 Statement myStat2 = this.con.createStatement();
                 myStat2.executeUpdate("insert into bruker" + " values ('" + username + "')");
-                System.out.println("New user added");
+                System.out.println("New user added.\n");
                 this.username = username;
             }
             return true;
