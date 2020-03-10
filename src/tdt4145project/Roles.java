@@ -1,4 +1,7 @@
 package tdt4145project;
+/**
+ * Used to control the view of actors and their roles in the movies they have acted in.
+ */
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,21 +10,28 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Roles {
-    DBProject dbProject = new DBProject();
-    Connection con = dbProject.connect();
+    Connection con;
+
+    public Roles(Connection con){
+        this.con = con;
+    }
 
 
-    public void getInput(){
-        /** kan anta at alle inputs er gyldige navn*/
-        Statement myStat;
+
+    private String getInput() {
+        /** Get input from user */
 
         Scanner input = new Scanner(System.in);  // Create a Scanner object
 
         System.out.println("Enter actor");
         String actor = input.nextLine();  // Read user input
-
+        return actor;
+    }
+    private void listMovies(String actor){
+        /** Find search name in database and print the wanted data*/
+        Statement myStat;
         try {
-            myStat = con.createStatement();
+            myStat = this.con.createStatement();
             String sql = "select personNr from involvertIFilm where navn = '" + actor +"';";
             ResultSet statement = myStat.executeQuery(sql);
 
@@ -38,7 +48,7 @@ public class Roles {
 
                     //find movie names
                     String sql3 = "select tittel from filmatisering where filmID = '" + filmID + "';";
-                    Statement myStat2 = con.createStatement();
+                    Statement myStat2 = this.con.createStatement();
                     ResultSet statement3 = myStat2.executeQuery(sql3);
                     statement3.next();
                     String tittel = statement3.getString("tittel");
@@ -58,8 +68,15 @@ public class Roles {
         }
     }
 
+    public void runRoleSearch(){
+        listMovies(getInput());
+
+    }
+
     public static void main(String[] args) {
-        Roles r = new Roles();
-        r.getInput();
+        DBProject dbProject = new DBProject();
+        Connection con = dbProject.connect();
+        Roles r = new Roles(con);
+        r.runRoleSearch();
     }
 }
