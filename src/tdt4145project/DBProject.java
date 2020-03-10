@@ -26,12 +26,13 @@ public class DBProject {
     	return conn;
     }
 	
-	private void addURLToDb(Connection con) {
-		/** Denne her er statisk, sÃ¥ den mÃ¥ endres for Ã¥ gi mening Ã¥ bruke*/
+	private void addURLToDb(Connection con, String URL, String adresse, String land) {
+		/** Denne her er statisk, sÃ¥ den må endres for å gi mening å bruke*/
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String sql = "insert into utgivelsesselskap " + " (URL, Adresse, Land)" + " values ('Hannes', 'Norge', 'Norge')";
+			String formatted = String.format(" values ('%s','%s','s%')", URL, adresse, land);
+			String sql = "insert into utgivelsesselskap " + " (URL, Adresse, Land)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -39,13 +40,14 @@ public class DBProject {
 			e.printStackTrace();
 		}	
 	}
-	private void addFilmToDb(Connection con) {
-		/** Denne her er statisk, sÃ¥ den mÃ¥ endres for Ã¥ gi mening Ã¥ bruke*/
+	private void addFilmToDb(Connection con, int filmID, String tittel, int lengde, int utgivelsesår, String lanseringsdato, String storyline, String Utgivelsesselskap_URL) {
+		/** Denne her er statisk, så den må endres for å gi mening å bruke*/
 
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String sql = "insert into filmatisering " + " (filmID, tittel, lengde, utgivelsesÃ¥r, lanseringsdato, storyline, Utgivelsesselskap_URL)" + " values (1, 'Ted', 120, 2012, null, 'plot', 'Hannes')";
+			String formatted = String.format(" values (%s,'%s',%s,%s,'%s','%s','s%')", filmID, tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL);
+			String sql = "insert into filmatisering " + " (filmID, tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -54,11 +56,11 @@ public class DBProject {
 		}
 	}
 	
-	private void addMusicToDb(Connection con, int musikkID, String  komponent, int  fremfÃ¸rtAv) {
+	private void addMusicToDb(Connection con, int musikkID, String  komponent, int  fremførtAv) {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values (%s,'%s','%s')", musikkID, komponent, fremfÃ¸rtAv);
+			String formatted = String.format(" values (%s,'%s','%s')", musikkID, komponent, fremførtAv);
 			String sql = "insert into Musikk " + " (musikkID, komponent, fremfÃ¸rtAv)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
@@ -68,12 +70,12 @@ public class DBProject {
 		}
 	}
 	
-	private void addInvolvedToDb(Connection con, int personNR,String  navn, int  fÃ¸dselsÃ¥r,String  fÃ¸dselsland) {
+	private void addInvolvedToDb(Connection con, int personNR,String  navn, int  fødselsår ,String  fødselsland) {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values (%s,'%s', %s, '%s')", personNR, navn, fÃ¸dselsÃ¥r, fÃ¸dselsland);
-			String sql = "insert into involvertIFilm " + " (personNR, navn, fÃ¸dselsÃ¥r, fÃ¸dselsland)" + formatted;
+			String formatted = String.format(" values (%s,'%s', %s, '%s')", personNR, navn, fødselsår, fødselsland);
+			String sql = "insert into involvertIFilm " + " (personNR, navn, fødselsår, fødselsland)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -115,7 +117,7 @@ public class DBProject {
 		try {
 			myStat = con.createStatement();
 			String formatted = String.format(" values (%s,%s)", involvertIFilm_personNr, filmatisering_filmID);
-			String sql = "insert into regissÃ¸rRegissertFilm " + " (involvertIFilm_personNr, filmatisering_filmID)" + formatted;
+			String sql = "insert into regissørRegissertFilm " + " (involvertIFilm_personNr, filmatisering_filmID)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
