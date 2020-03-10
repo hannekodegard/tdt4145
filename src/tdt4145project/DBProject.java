@@ -13,7 +13,6 @@ public class DBProject {
 		Connection conn;
     	try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-	    // Class.forName("com.mysql.cj.jdbc.Driver"); when you are using MySQL 8.0.	    
             // Properties for user and password.
             Properties p = new Properties();
             p.put("user", username);
@@ -28,6 +27,7 @@ public class DBProject {
     }
 	
 	private void addURLToDb(Connection con) {
+		/** Denne her er statisk, så den må endres for å gi mening å bruke*/
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
@@ -40,10 +40,12 @@ public class DBProject {
 		}	
 	}
 	private void addFilmToDb(Connection con) {
+		/** Denne her er statisk, så den må endres for å gi mening å bruke*/
+
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String sql = "insert into filmatisering " + " (filmID, tittel, lengde, utgivelses�r, lanseringsdato, storyline, Utgivelsesselskap_URL)" + " values (1, 'Ted', 120, 2012, null, 'plot', 'Hannes')";
+			String sql = "insert into filmatisering " + " (filmID, tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL)" + " values (1, 'Ted', 120, 2012, null, 'plot', 'Hannes')";
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -52,12 +54,12 @@ public class DBProject {
 		}
 	}
 	
-	private void addMusicToDb(Connection con, int musikkID, String  komponent, int  fremf�rtAv) {
+	private void addMusicToDb(Connection con, int musikkID, String  komponent, int  fremførtAv) {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values (%s,'%s','%s')", musikkID, komponent, fremf�rtAv);
-			String sql = "insert into Musikk " + " (musikkID, komponent, fremf�rtAv)" + formatted;
+			String formatted = String.format(" values (%s,'%s','%s')", musikkID, komponent, fremførtAv);
+			String sql = "insert into Musikk " + " (musikkID, komponent, fremførtAv)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -66,12 +68,12 @@ public class DBProject {
 		}
 	}
 	
-	private void addInvolvedToDb(Connection con, int personNR,String  navn, int  f�dsels�r,String  f�dselsland) {
+	private void addInvolvedToDb(Connection con, int personNR,String  navn, int  fødselsår,String  fødselsland) {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values (%s,'%s', %s, '%s')", personNR, navn, f�dsels�r, f�dselsland);
-			String sql = "insert into involvertIFilm " + " (personNR, navn, f�dsels�r, f�dselsland)" + formatted;
+			String formatted = String.format(" values (%s,'%s', %s, '%s')", personNR, navn, fødselsår, fødselsland);
+			String sql = "insert into involvertIFilm " + " (personNR, navn, fødselsår, fødselsland)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -113,7 +115,7 @@ public class DBProject {
 		try {
 			myStat = con.createStatement();
 			String formatted = String.format(" values (%s,%s)", involvertIFilm_personNr, filmatisering_filmID);
-			String sql = "insert into regiss�rRegissertFilm " + " (involvertIFilm_personNr, filmatisering_filmID)" + formatted;
+			String sql = "insert into regissørRegissertFilm " + " (involvertIFilm_personNr, filmatisering_filmID)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -210,6 +212,7 @@ public class DBProject {
 	public static void main(String[] args) {
 		DBProject dbproject = new DBProject();
 		Connection con = dbproject.connect();
+<<<<<<< HEAD
 		//dbproject.addURLToDb(con);
 		//dbproject.addFilmToDb(con);
 		//dbproject.showDbInfo(con);
@@ -219,6 +222,9 @@ public class DBProject {
 		//dbproject.addCategoryToDb(con, 2, "Komedie");
 		//dbproject.addHasCategoryToDb(con, 1, 2);
 		//Hei
+=======
+
+>>>>>>> 13f2b3b0c49727565271448f61808964b4df58f1
 	}
 	
 }
