@@ -29,7 +29,6 @@ public class DBProject {
     }
 	
 	private void addURLToDb(Connection con, String URL, String adresse, String land) {
-		/** Denne her er statisk, sÃ¥ den må endres for å gi mening å bruke*/
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
@@ -43,7 +42,6 @@ public class DBProject {
 		}	
 	}
 	private void addFilmToDb(Connection con, String tittel, int lengde, int utgivelsesår, String lanseringsdato, String storyline, String Utgivelsesselskap_URL) {
-		/** Denne her er statisk, så den må endres for å gi mening å bruke*/
 		//Format utgivelsesår: YYYY-MM-DD
 
 		Statement myStat;
@@ -286,7 +284,7 @@ public class DBProject {
 		}
 	}
 
-	private void addmovie(Connection con) {
+	public void addmovie(Connection con) {
 		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 		System.out.println("Hva heter filmen?");
 		String movieName = myObj.nextLine();  // Read user input
@@ -344,7 +342,7 @@ public class DBProject {
 		//dbproject.addCategoryToDb(con, 2, "Komedie");
 		//dbproject.addHasCategoryToDb(con, 1, 2);
 		//Hei
-		dbproject.addmovie(con);
+//		dbproject.addmovie(con);
 	}
 	
 }
