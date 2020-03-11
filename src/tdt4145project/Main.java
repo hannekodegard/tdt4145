@@ -20,7 +20,7 @@ public class Main {
 
         while (!choice.equals("q")) {
             System.out.println("Hva vil du gjøre?");
-            System.out.println("1) Søk på skuespiller og se roller \n2) Se største filmselskaper innen hver sjanger\n3) Blablabla\nq) Quit application");
+            System.out.println("1) Søk på skuespiller og se roller \n2) Se største filmselskap innen hver sjanger\n3) Legg til ny film\nq) Quit application");
 
             choice = input.nextLine();
 
@@ -31,7 +31,7 @@ public class Main {
                 genre.runGenreSearch();
             }
             else if (choice.equals("3")){
-
+                dbProject.addmovie(con);
             }
             System.out.println("\n\n");
         }
