@@ -10,6 +10,7 @@ public class Main {
 
     Roles roles = new Roles(con);
     User user = new User(con);
+    Genre genre = new Genre(con);
 
     public void runProgram(){
         String choice = "0";
@@ -19,7 +20,7 @@ public class Main {
 
         while (!choice.equals("q")) {
             System.out.println("Hva vil du gjøre?");
-            System.out.println("1) Søk på skuespiller og se roller \n2) Blablabla\n3) Blablabla\nq) Quit application");
+            System.out.println("1) Søk på skuespiller og se roller \n2) Se største filmselskaper innen hver sjanger\n3) Blablabla\nq) Quit application");
 
             choice = input.nextLine();
 
@@ -27,11 +28,12 @@ public class Main {
                 roles.runRoleSearch();
             }
             else if (choice.equals("2")){
-                System.out.println("Valg 2");
+                genre.runGenreSearch();
             }
             else if (choice.equals("3")){
 
             }
+            System.out.println("\n\n");
         }
     }
 
