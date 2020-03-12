@@ -156,19 +156,7 @@ public class DBProject {
 		}
 	}
 	
-	private void addFormatToDb(Connection con, String type, int filmID) {
-		Statement myStat;
-		try {
-			myStat = con.createStatement();
-			String formatted = String.format(" values ('%s',%s)", type, filmID);
-			String sql = "insert into format " + " (type, filmID)" + formatted;
-			myStat.executeUpdate(sql);
-			System.out.println("Insert complete");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	
 	private void addCategoryToDb(Connection con, String beskrivelse) {
 		Statement myStat;
@@ -437,7 +425,17 @@ public class DBProject {
 		System.out.println("Kan filmen streames?");
 		String stream = myObj.nextLine();
 		if(stream.toUpperCase().equals("JA")) {
-
+			addFilmHasFormatToDb(con, filmID, "Streaming");
+		}
+		System.out.println("Kan filmen vises på kino?");
+		String stream = myObj.nextLine();
+		if(stream.toUpperCase().equals("JA")) {
+			addFilmHasFormatToDb(con, filmID, "Kino");
+		}
+		System.out.println("Kan filmen ses på TV?");
+		String stream = myObj.nextLine();
+		if(stream.toUpperCase().equals("JA")) {
+			addFilmHasFormatToDb(con, filmID, "TV");
 		}
 
 	}
@@ -511,6 +509,13 @@ public class DBProject {
 	public static void main(String[] args) {
 		DBProject dbproject = new DBProject();
 		Connection con = dbproject.connect();
+
+		//Kjøres bare første gang
+		dbproject.addFormatToDb(con, "Kino");
+		dbproject.addFormatToDb(con, "TV");
+		dbproject.addFormatToDb(con, "Streaming");
+
+
 		//dbproject.addURLToDb(con, "DreamWorks", "New York", "USA");
 		//dbproject.addFilmToDb(con,"Mamma Mia", 200, 2018, "2018-12-20", "Music", "DreamWorks");
 		//dbproject.showDbInfo(con);
