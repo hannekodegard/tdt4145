@@ -59,12 +59,12 @@ public class DBProject {
 		}
 	}
 	
-	private void addMusicToDb(Connection con, int musikkID, String  komponent, int  fremførtAv) {
+	private void addMusicToDb(Connection con, String  komponent, String  fremførtAv) {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values (%s,'%s','%s')", musikkID, komponent, fremførtAv);
-			String sql = "insert into Musikk " + " (musikkID, komponent, fremfÃ¸rtAv)" + formatted;
+			String formatted = String.format(" values ('%s','%s')", komponent, fremførtAv);
+			String sql = "insert into Musikk " + " (komponent, fremførtAv)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -143,12 +143,12 @@ public class DBProject {
 		}
 	}
 	
-	private void addCategoryToDb(Connection con, int sjangerID, String beskrivelse) {
+	private void addCategoryToDb(Connection con, String beskrivelse) {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values (%s,'%s')", sjangerID, beskrivelse);
-			String sql = "insert into kategori " + " (sjangerID, beskrivelse)" + formatted;
+			String formatted = String.format(" values ('%s')", beskrivelse);
+			String sql = "insert into kategori " + " (beskrivelse)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -171,12 +171,12 @@ public class DBProject {
 		}
 	}
 	
-	private void addEpisodeToDb(Connection con, int episodeNr, int sesong, int filmatisering_filmID) {
+	private void addEpisodeToDb(Connection con, int sesong, int filmatisering_filmID) {
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values (%s,%s,%s)", episodeNr, sesong, filmatisering_filmID);
-			String sql = "insert into episode " + " (episodeNr, sesong, filmatisering_filmID)" + formatted;
+			String formatted = String.format(" values (%s,%s)", sesong, filmatisering_filmID);
+			String sql = "insert into episode " + " (sesong, filmatisering_filmID)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -241,8 +241,21 @@ public class DBProject {
 		String lanseringsdato = myObj.nextLine();  // Read user input
 		System.out.println("Hva handler den om");
 		String storyline = myObj.nextLine();  // Read user input
+		System.out.println("Er dette en episode av en serie?");
+		String erEpisode = myObj.nextLine();  // Read user input
+		System.out.println(erEpisode);
+		if (erEpisode.equals("Ja") || erEpisode.equals("ja")) {
+			System.out.println("Hvilken serie tilhører episoden?");
+			String filmNavn = myObj.nextLine();  // Read user input
+			System.out.println("Hvilken sesong tilhører den?");
+			int episodeSesong = Integer.parseInt(myObj.nextLine());  // Read user input
+			int filmID = findFilmID(con, filmNavn);
+			if (filmID != -1) {
+				this.addEpisodeToDb(con, episodeSesong, filmID); }
+			else {System.out.println("Serien eksisterer ikke");}
+		}
 
-		this.addFilmToDb(con, movieName, lengde, utgivelsesår, lanseringsdato, storyline, URL);
+		else{this.addFilmToDb(con, movieName, lengde, utgivelsesår, lanseringsdato, storyline, URL);}
 
 	}
 
@@ -256,7 +269,21 @@ public class DBProject {
 				return statement.getInt("personNr");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	private int checkGenre(Connection con, String sjangerNavn) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String sql = String.format("select sjangerID from tdt4145.kategori where beskrivelse = '%s'", sjangerNavn);
+			ResultSet statement = myStat.executeQuery(sql);
+			if (statement.next()) {
+				return statement.getInt("sjangerID");
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return -1;
@@ -266,6 +293,7 @@ public class DBProject {
 		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 		System.out.println("Hvor mange skuespillere er det i filmen");
 		int antallSkuespillere = Integer.parseInt(myObj.nextLine());
+		if ( antallSkuespillere > 0) {
 		for(int i = 0; i <= antallSkuespillere; i++) {
 			System.out.println("Hva heter skuespilleren?");
 			String skuespillerNavn = myObj.nextLine();
@@ -282,8 +310,91 @@ public class DBProject {
 			String rolle = myObj.nextLine();  // Read user input
 			int personNr = this.checkActor(con, skuespillerNavn);
 			this.addActorToDb(con, personNr, filmID, rolle);
-
 		}
+		}
+	}
+
+	private void addWriter(Connection con, int filmID) {
+		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+		System.out.println("Hvor mange manusskribenter er det i filmen");
+		int antallSkribenter = Integer.parseInt(myObj.nextLine());
+		if (antallSkribenter > 0) {
+		for(int i = 1; i <= antallSkribenter; i++) {
+			System.out.println("Hva heter skribenten?");
+			String skribentNavn = myObj.nextLine();
+			int checkActor = checkActor(con, skribentNavn);
+			if (checkActor == -1) {
+				System.out.println("Hva er fødselsåret til skribenten?");
+				int fødselsår = Integer.parseInt(myObj.nextLine());  // Read user input
+				System.out.println("Hvilket land er skribenten fra?");
+				String land = myObj.nextLine();  // Read user input
+				this.addInvolvedToDb(con, skribentNavn, fødselsår, land);
+
+			}
+			int personNr = this.checkActor(con, skribentNavn);
+			this.addWriterToDb(con, personNr, filmID);
+		}
+		}
+	}
+
+	private void addProducer(Connection con, int filmID) {
+		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+		System.out.println("Hva heter produsenten?");
+		String produsentNavn = myObj.nextLine();
+		int checkActor = checkActor(con, produsentNavn);
+		if (checkActor == -1) {
+			System.out.println("Hva er fødselsåret til produsenten?");
+			int fødselsår = Integer.parseInt(myObj.nextLine());  // Read user input
+			System.out.println("Hvilket land er produsenten fra?");
+			String land = myObj.nextLine();  // Read user input
+			this.addInvolvedToDb(con, produsentNavn, fødselsår, land);
+			}
+		int personNr = this.checkActor(con, produsentNavn);
+		this.addProducerToDb(con, personNr, filmID);
+
+	}
+
+	private void addMusic(Connection con, int filmID) {
+		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+		System.out.println("Hvor mange sanger er det i filmen");
+		int antallSkribenter = Integer.parseInt(myObj.nextLine());
+		if (antallSkribenter > 0) {
+			for(int i = 1; i <= antallSkribenter; i++) {
+				System.out.println("Hva heter sanfen");
+				String sangTittel = myObj.nextLine();
+				System.out.println("Hvem har komponert sangen");
+				String komponist = myObj.nextLine();  // Read user input
+				System.out.println("Hvem er sangen fremført av?");
+				String fremførtAv = myObj.nextLine();  // Read user input
+				this.addMusicToDb(con, komponist, fremførtAv);
+				this.addMusicInMovieToDb(con, musicID, filmID);
+
+			}
+		}
+	}
+
+	private void addFormat(Connection con, int filmID) {
+		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+		System.out.println("Kan filmen streames?");
+		String stream = myObj.nextLine();
+		if(stream.toUpperCase().equals("JA")) {
+			this.addFormat();
+		}
+
+	}
+
+	private void addGenre(Connection con, int filmID) {
+		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+		System.out.println("Hvilken sjanger er filmen");
+		String sjangerNavn = myObj.nextLine();
+		int checkGenre = checkGenre(con, sjangerNavn);
+		if (checkGenre == -1) {
+			this.addCategoryToDb(con, sjangerNavn);
+		}
+		int genreID = checkGenre(con, sjangerNavn);
+		this.addHasCategoryToDb(con, filmID, genreID);
+
+
 	}
 
 	private void addmovie(Connection con) {
@@ -308,7 +419,12 @@ public class DBProject {
 			}
 			this.updateMovie(con, movieName, thisURL);
 			int filmID = this.findFilmID(con, movieName);
-			this.addActors(con, filmID);
+			this.addActors(con, filmID); //Tillater flere skuespillere
+			this.addProducer(con, filmID); //Antar bare en produsent
+			this.addWriter(con, filmID); //Tillater flere manusforfattere
+			this.addMusic(con, filmID);
+			this.addGenre(con, filmID);
+			this.addFormat(con, filmID);
 			System.out.println("Ferdig");
 
 
