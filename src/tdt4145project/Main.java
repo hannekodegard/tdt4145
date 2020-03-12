@@ -28,6 +28,10 @@ public class Main {
                 genre.runGenreSearch();
             } else if (choice.equals("3")) {
                 dbProject.addmovie(con);
+            } else if (choice.equals("2")) {
+                genre.runGenreSearch();
+            } else if (choice.equals("3")) {
+                dbProject.addmovie(con);
             }
             System.out.println("\n\n");
         }
