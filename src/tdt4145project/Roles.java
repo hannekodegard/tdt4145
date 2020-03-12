@@ -39,7 +39,7 @@ public class Roles {
             // find movies
             if(statement.next()) {
                 String personNr = statement.getString("personNr");
-
+                System.out.println(actor + " spiller i filmene: \n");
                 String sql2 = "select filmatisering_filmID, rolle from skuespillerIFilm where involvertIFilm_personNr = '" + personNr + "';";
                 ResultSet statement2 = myStat.executeQuery(sql2);
                 while (statement2.next()) {
@@ -52,7 +52,7 @@ public class Roles {
                     ResultSet statement3 = myStat2.executeQuery(sql3);
                     statement3.next();
                     String tittel = statement3.getString("tittel");
-                    System.out.println(actor + " spiller i filmene: \n" + tittel + " som " + rolle + "\n");
+                    System.out.println( tittel + " som " + rolle + "\n");
                 }
                 System.out.println("----------------------");
                 System.out.println("All results printed.");
