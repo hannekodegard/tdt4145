@@ -41,14 +41,43 @@ public class DBProject {
 			e.printStackTrace();
 		}	
 	}
-	private void addFilmToDb(Connection con, String tittel, int lengde, int utgivelsesår, String lanseringsdato, String storyline, String Utgivelsesselskap_URL) {
+
+	private void addFormatToDb(Connection con,  String type) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values ('%s')", type);
+			String sql = "insert into format " + " (type)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void addFilmHasFormatToDb(Connection con, int filmID, String type) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String formatted = String.format(" values (%s,'%s')", filmID, type);
+			String sql = "insert into filmatisering_has_format " + " (filmID, type)" + formatted;
+			myStat.executeUpdate(sql);
+			System.out.println("Insert complete");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void addFilmToDb(Connection con, String tittel, int lengde, int utgivelsesår, String lanseringsdato, String storyline, String Utgivelsesselskap_URL, int serie) {
 		//Format utgivelsesår: YYYY-MM-DD
 
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values ('%s',%s,%s,'%s','%s','%s')", tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL);
-			String sql = "insert into filmatisering " + " (tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL)" + formatted;
+			String formatted = String.format(" values ('%s',%s,%s,'%s','%s','%s', %s)", tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL, serie);
+			String sql = "insert into filmatisering " + " (tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL, serie)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -229,6 +258,21 @@ public class DBProject {
 		return -1;
 	}
 
+	private int isSeries(Connection con, int filmID) {
+		Statement myStat;
+		try {
+			myStat = con.createStatement();
+			String sql = String.format("select serie from tdt4145.filmatisering where filmID = %s", filmID);
+			ResultSet statement = myStat.executeQuery(sql);
+			if (statement.next()) {
+				return statement.getInt("serie");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 	private void updateMovie(Connection con, String movieName, String URL) {
 		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 		System.out.println("Hvor lang er filmen (i min)?");
@@ -239,21 +283,37 @@ public class DBProject {
 		String lanseringsdato = myObj.nextLine();  // Read user input
 		System.out.println("Hva handler den om");
 		String storyline = myObj.nextLine();  // Read user input
-		System.out.println("Er dette en episode av en serie?");
-		String erEpisode = myObj.nextLine();  // Read user input
-		System.out.println(erEpisode);
-		if (erEpisode.equals("Ja") || erEpisode.equals("ja")) {
-			System.out.println("Hvilken serie tilhører episoden?");
-			String filmNavn = myObj.nextLine();  // Read user input
-			System.out.println("Hvilken sesong tilhører den?");
-			int episodeSesong = Integer.parseInt(myObj.nextLine());  // Read user input
-			int filmID = findFilmID(con, filmNavn);
-			if (filmID != -1) {
-				this.addEpisodeToDb(con, episodeSesong, filmID); }
-			else {System.out.println("Serien eksisterer ikke");}
+		System.out.println("Er dette en serie?");
+		String erserie = myObj.nextLine();  // Read user input
+		int serie = 0;
+		if (erserie.equals("Ja") || erserie.equals("ja")) {
+			serie = 1;
 		}
-
-		else{this.addFilmToDb(con, movieName, lengde, utgivelsesår, lanseringsdato, storyline, URL);}
+		else {
+			System.out.println("Er dette en episode av en serie?");
+			String erEpisode = myObj.nextLine();  // Read user input
+			System.out.println(erEpisode);
+			if (erEpisode.equals("Ja") || erEpisode.equals("ja")) {
+				System.out.println("Hvilken serie tilhører episoden?");
+				String filmNavn = myObj.nextLine();  // Read user input
+				System.out.println("Hvilken sesong tilhører den?");
+				int episodeSesong = Integer.parseInt(myObj.nextLine());  // Read user input
+				int filmID = findFilmID(con, filmNavn);
+				if (filmID == -1) {
+					System.out.println("Serien eksisterer ikke");
+				} else {
+					int isSeries = isSeries(con, filmID);
+					if (isSeries == 0) {
+						System.out.println("Filmen eksisterer, men er ikke en serie");
+					} else {
+						this.addEpisodeToDb(con, episodeSesong, filmID);
+						serie = 1;
+						System.out.println("Serie lagt til");
+					}
+				}
+			}
+		}
+		this.addFilmToDb(con, movieName, lengde, utgivelsesår, lanseringsdato, storyline, URL, serie);
 
 	}
 
@@ -365,19 +425,19 @@ public class DBProject {
 				System.out.println("Hvem er sangen fremført av?");
 				String fremførtAv = myObj.nextLine();  // Read user input
 				this.addMusicToDb(con, komponist, fremførtAv);
-				this.addMusicInMovieToDb(con, musicID, filmID);
+				//this.addMusicInMovieToDb(con, musicID, filmID);
 
 			}
 		}
 	}
 
-<<<<<<< HEAD
+
 	private void addFormat(Connection con, int filmID) {
 		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 		System.out.println("Kan filmen streames?");
 		String stream = myObj.nextLine();
 		if(stream.toUpperCase().equals("JA")) {
-			this.addFormat();
+
 		}
 
 	}
@@ -396,10 +456,8 @@ public class DBProject {
 
 	}
 
-	private void addmovie(Connection con) {
-=======
 	public void addmovie(Connection con) {
->>>>>>> f437a4be8ae0fbdcfe97eec35aa9ef645b306c3d
+
 		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 		System.out.println("Hva heter filmen?");
 		String movieName = myObj.nextLine();  // Read user input
@@ -462,7 +520,7 @@ public class DBProject {
 		//dbproject.addCategoryToDb(con, 2, "Komedie");
 		//dbproject.addHasCategoryToDb(con, 1, 2);
 		//Hei
-//		dbproject.addmovie(con);
+		dbproject.addmovie(con);
 	}
 	
 }
