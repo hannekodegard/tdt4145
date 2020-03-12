@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.util.Scanner;
 
 public class Main {
-    DBProject dbProject = new DBProject();
-    Connection con = dbProject.connect();
-
+  /*
 
     Roles roles = new Roles(con);
     User user = new User(con);
@@ -49,4 +47,5 @@ public class Main {
 
 
     }
+    */
 }
