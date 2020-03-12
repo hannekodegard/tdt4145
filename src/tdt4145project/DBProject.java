@@ -41,14 +41,14 @@ public class DBProject {
 			e.printStackTrace();
 		}	
 	}
-	private void addFilmToDb(Connection con, String tittel, int lengde, int utgivelsesår, String lanseringsdato, String storyline, String Utgivelsesselskap_URL) {
+	private void addFilmToDb(Connection con, String tittel, int lengde, int utgivelsesår, String lanseringsdato, String storyline, String Utgivelsesselskap_URL, int serie) {
 		//Format utgivelsesår: YYYY-MM-DD
 
 		Statement myStat;
 		try {
 			myStat = con.createStatement();
-			String formatted = String.format(" values ('%s',%s,%s,'%s','%s','%s')", tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL);
-			String sql = "insert into filmatisering " + " (tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL)" + formatted;
+			String formatted = String.format(" values ('%s',%s,%s,'%s','%s','%s', %s)", tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL, serie);
+			String sql = "insert into filmatisering " + " (tittel, lengde, utgivelsesår, lanseringsdato, storyline, Utgivelsesselskap_URL, serie)" + formatted;
 			myStat.executeUpdate(sql);
 			System.out.println("Insert complete");
 		} catch (SQLException e) {
@@ -239,8 +239,15 @@ public class DBProject {
 		String lanseringsdato = myObj.nextLine();  // Read user input
 		System.out.println("Hva handler den om");
 		String storyline = myObj.nextLine();  // Read user input
+		System.out.println("Er dette en serie? (ja/nei)");
+		String serie = myObj.nextLine();  // Read user input
+		int serieBoolean = 0;
+		if (serie.equals("ja")){
+			serieBoolean = 1;
+		}
 
-		this.addFilmToDb(con, movieName, lengde, utgivelsesår, lanseringsdato, storyline, URL);
+
+		this.addFilmToDb(con, movieName, lengde, utgivelsesår, lanseringsdato, storyline, URL, serieBoolean);
 
 	}
 
@@ -343,6 +350,7 @@ public class DBProject {
 		//dbproject.addHasCategoryToDb(con, 1, 2);
 		//Hei
 //		dbproject.addmovie(con);
+//		dbproject.addEpisodeToDb(con, 1, 1, 3);
 	}
 	
 }

@@ -11,6 +11,7 @@ public class Main {
     Roles roles = new Roles(con);
     User user = new User(con);
     Genre genre = new Genre(con);
+    Review review = new Review(con);
 
     public void runProgram(){
         String choice = "0";
@@ -20,7 +21,7 @@ public class Main {
 
         while (!choice.equals("q")) {
             System.out.println("Hva vil du gjøre?");
-            System.out.println("1) Søk på skuespiller og se roller \n2) Se største filmselskap innen hver sjanger\n3) Legg til ny film\nq) Quit application");
+            System.out.println("1) Søk på skuespiller og se roller \n2) Se største filmselskap innen hver sjanger\n3) Legg til ny film\n4) Se alle serier\nq) Quit application");
 
             choice = input.nextLine();
 
@@ -32,6 +33,11 @@ public class Main {
             }
             else if (choice.equals("3")){
                 dbProject.addmovie(con);
+            }
+            else if (choice.equals("4")){
+                review.listSeries();
+                review.runSeriesSearch();
+                review.addReview(user);
             }
             System.out.println("\n\n");
         }

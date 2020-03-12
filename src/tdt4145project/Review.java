@@ -14,7 +14,7 @@ public class Review {
         this.con = con;
     }
 
-    private String getInput(Connection con){
+    private String getInput(){
         Scanner input = new Scanner(System.in);  // Create a Scanner object
 
         System.out.println("Enter the title of the series:");
@@ -40,11 +40,11 @@ public class Review {
     }
 
     public String findFilmID(String title){
-        //Shows a list of all episodes in a given series
+        //Shows a list of all episodes in a given seriesa
         Statement myStat;
         try {
             myStat = this.con.createStatement();
-            String sql = String.format("select filmID from tdt4145.filmatisering where filmatisering.tittel = %s", title);
+            String sql = String.format("select filmID from tdt4145.filmatisering where filmatisering.tittel = '%s'", title);
             ResultSet statement = myStat.executeQuery(sql);
             if (statement.next()) {
                 return statement.getString("filmID");
@@ -65,11 +65,10 @@ public class Review {
         Statement myStat;
         try {
             myStat = this.con.createStatement();
-            String sql = String.format("select tittel, episodeNr from tdt4145.episode where filmatisering_filmID = '%s'", filmID);
+            String sql = String.format("select episodeNr from tdt4145.episode where filmatisering_filmID = '%s'", filmID);
             ResultSet statement = myStat.executeQuery(sql);
-            int episodeNr = statement.getInt("episodeNr");
             while (statement.next()) {
-                System.out.println(statement.getString("tittel") + ", " + statement.getInt("episodeNr"));
+                System.out.println(title + ": episodeNr "+statement.getString( statement.getInt("episodeNr")));
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -78,13 +77,13 @@ public class Review {
     }
 
     public void runSeriesSearch(){
-        searchSeries(getInput(con));
+        searchSeries(getInput());
     }
 
-    public void addReview(Connection con){
+    public void addReview(User u1){
 
-        User u1 = new User(con);
-        u1.logIn();
+//        User u1 = new User(this.con);
+//        u1.logIn();
 
         Scanner input = new Scanner(System.in); // Create a Scanner object
 
@@ -105,18 +104,18 @@ public class Review {
         String review = input.nextLine();
 
         // Add the rating and review to the database
-        addReviewToDB(con, u1, episodeNr, rating, review);
+        addReviewToDB(u1, episodeNr, rating, review);
 
     }
 
-    private void addReviewToDB(Connection con, User bruker_brukernavn, int episode_episodeNr, int rating, String beskrivelse) {
+    private void addReviewToDB(User bruker_brukernavn, int episode_episodeNr, int rating, String beskrivelse) {
         //Adds a review to the database //Skjønner ikke hvordan denne kobles til riktig når vi ikke har tittel?
         Statement myStat;
 
         try {
             myStat = this.con.createStatement();
-            String formatted = String.format(" values (%s,%s,%s,'%s')", bruker_brukernavn, episode_episodeNr, rating, beskrivelse);
-            String sql = "insert into episode " + " (bruker_brukernavn, episode_episodeNr, rating, beskrivelse)" + formatted;
+            String formatted = String.format(" values (%s,'%s',%s,'%s')", episode_episodeNr, bruker_brukernavn.username, rating, beskrivelse);
+            String sql = "insert into ratingEpisode " + " (episode_episodeNr, bruker_brukernavn, rating, beskrivelse)" + formatted;
             myStat.executeUpdate(sql);
             System.out.println("Insert complete");
         } catch (SQLException e) {
@@ -129,6 +128,7 @@ public class Review {
         //Testing the functionality
         DBProject dbProject = new DBProject();
         Connection con = dbProject.connect();
+
 
 
 
